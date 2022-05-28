@@ -1,0 +1,19 @@
+name: Check pull request title
+
+on:
+  pull_request:
+    branches:
+      - develop
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  check-pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check title
+        run: |
+          chmod +x ./.github/scripts/pr_title.sh
+          ./.github/scripts/pr_title.sh
+        env:
+          MESSAGE: ${{ github.event.pull_request.title }}
