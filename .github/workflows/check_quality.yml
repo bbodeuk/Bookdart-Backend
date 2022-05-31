@@ -18,8 +18,8 @@ jobs:
           check-latest: true
       - name: Run lint
         run: |
-          npm ci
-          npm run lint-diff
+          yarn install --frozen-lockfile
+          yarn run lint-diff
         env:
           CI: true
           BASE: ${{ github.base_ref }}
