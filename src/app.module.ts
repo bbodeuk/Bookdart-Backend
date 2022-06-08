@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
@@ -8,6 +8,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     TypeOrmModule.forRoot(),
   ],
   controllers: [],
-  providers: [],
+  providers: [ConfigService],
 })
 export class AppModule {}
