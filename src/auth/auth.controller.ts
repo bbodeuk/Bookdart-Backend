@@ -14,5 +14,8 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   // eslint-disable-next-line
-  async googleAuthCallback(@Req() req: Request, @Res() res: Response) {}
+  async googleAuthCallback(@Req() req: Request, @Res() res: Response) {
+    // TODO: 유저 정보 확인 (없다면 저장)
+    // TODO: 토큰 발급 진행 (JWT)
+  }
 }
