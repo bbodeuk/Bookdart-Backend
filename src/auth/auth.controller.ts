@@ -19,11 +19,11 @@ export class AuthController {
   @UseGuards(AuthGuard('google'))
   // eslint-disable-next-line
   async googleAuthCallback(@Req() req: Request, @Res() res: Response) {
-    // TODO: 유저 정보 확인 (없다면 저장)
-    // TODO: 토큰 발급 진행 (JWT)
     const user = await this.userService.findByProviderIdOrSave(
       req.user as User,
     );
+    // TODO: 토큰 발급 진행 (JWT)
+    // TODO: fix redirect url
     res.redirect('/');
   }
 }
