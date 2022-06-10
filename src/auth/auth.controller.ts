@@ -19,6 +19,7 @@ export class AuthController {
   @UseGuards(AuthGuard('google'))
   // eslint-disable-next-line
   async googleAuthCallback(@Req() req: Request, @Res() res: Response) {
+    // eslint-disable-next-line
     const user = await this.userService.findByProviderIdOrSave(
       req.user as User,
     );
