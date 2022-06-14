@@ -6,7 +6,7 @@ import { JwtStrategy } from './jwt.strategy';
 @Module({
   imports: [
     JwtModule.registerAsync({
-      useFactory: async () => ({
+      useFactory: () => ({
         secret: process.env.JWT_SECRET,
         signOptions: {
           expiresIn: process.env.JWT_EXPIRES_IN,
