@@ -9,6 +9,7 @@ export class JwtAuthService {
   login({ email, id }: { email: string; id: string }): string {
     const payload: JwtPayload = { email, id };
 
+    // TODO: Using refresh-token
     const accessToken = this.jwtService.sign(payload);
 
     return accessToken;
