@@ -1,12 +1,16 @@
 import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
-import { UserService } from '../user/user.service';
 import { User } from '../@types/users';
+import { UserService } from '../user/user.service';
+import { JwtAuthService } from '../jwt/jwt.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private jwtAuthService: JwtAuthService,
+  ) {}
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
@@ -23,8 +27,11 @@ export class AuthController {
     const user = await this.userService.findByProviderIdOrSave(
       req.user as User,
     );
-    // TODO: 토큰 발급 진행 (JWT)
-    // TODO: fix redirect url
+
+    const accessToken = this.jwtAuthService.login(user);
+    res.cookie('access-token', accessToken);
+
+    // FIXME: fix redirect url
     res.redirect('/');
   }
 }
