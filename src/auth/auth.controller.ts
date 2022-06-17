@@ -31,10 +31,11 @@ export class AuthController {
 
     const payload = { id: user.id, email: user.email };
 
-    // TODO: refresh Token 발급, 저장
     const { accessToken, refreshToken } = this.jwtAuthService.login(payload);
     res.cookie('access-token', accessToken);
     res.cookie('refresh-token', refreshToken);
+
+    await this.userService.updateHashedRefreshToken(user.id, refreshToken);
 
     // FIXME: fix redirect url
     res.redirect('/');
