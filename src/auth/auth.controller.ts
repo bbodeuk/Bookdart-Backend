@@ -1,15 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Req,
-  Res,
-  UnauthorizedException,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
-import * as argon2 from 'argon2';
 import { User } from 'src/@types/users';
 import { RtGuard } from '../common/guards';
 import { UserService } from '../user/user.service';
@@ -58,12 +49,10 @@ export class AuthController {
 
     const user = await this.userService.findById(id);
 
-    const isHashed = await argon2.verify(user.hashedRefreshToken, refreshToken);
-
-    if (!isHashed) {
-      // TODO: Throw error or redirect login
-      throw new UnauthorizedException();
-    }
+    await this.jwtAuthService.checkHashedRefreshToken(
+      user.hashedRefreshToken,
+      refreshToken,
+    );
 
     const tokens = this.jwtAuthService.login({
       id,
