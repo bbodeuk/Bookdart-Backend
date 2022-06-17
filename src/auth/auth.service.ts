@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayload } from './strategies/at.strategy';
+import { JwtPayload, Tokens } from 'src/@types/auth';
 
 @Injectable()
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  login(payload: JwtPayload): { accessToken: string; refreshToken: string } {
+  login(payload: JwtPayload): Tokens {
     const accessToken = this.jwtService.sign(payload, {
       expiresIn: '2h',
       secret: process.env.JWT_SECRET,
