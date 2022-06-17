@@ -17,7 +17,6 @@ export class UserEntity {
   @Column({ type: 'varchar' })
   providerId: string;
 
-  // TODO: Add hashedRefreshToken
   @Column({ type: 'varchar', nullable: true })
   hashedRefreshToken?: string;
 }
