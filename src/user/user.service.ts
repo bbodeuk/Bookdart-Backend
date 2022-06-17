@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as argon2 from 'argon2';
@@ -52,7 +52,9 @@ export class UserService {
   async findById(userId: string): Promise<UserEntity> {
     const user = await this.userRepository.findOne({ where: { id: userId } });
 
-    // TODO: 유저 없는 경우 에러
+    if (!user) {
+      throw new ForbiddenException('Access Denied');
+    }
 
     return user;
   }
