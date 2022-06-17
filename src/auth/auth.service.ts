@@ -1,13 +1,13 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
-import { JwtPayload, Tokens } from 'src/@types/auth';
+import { JwtPayload, Token } from 'src/@types/auth';
 
 @Injectable()
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  login(payload: JwtPayload): Tokens {
+  login(payload: JwtPayload): Token {
     const accessToken = this.jwtService.sign(payload, {
       expiresIn: '2h',
       secret: process.env.JWT_SECRET,

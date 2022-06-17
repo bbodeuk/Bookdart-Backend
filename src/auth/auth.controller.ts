@@ -54,17 +54,17 @@ export class AuthController {
       refreshToken,
     );
 
-    const tokens = this.authService.login({
+    const token = this.authService.login({
       id,
       email,
     });
 
-    res.cookie('access-token', tokens.accessToken);
-    res.cookie('refresh-token', tokens.refreshToken);
+    res.cookie('access-token', token.accessToken);
+    res.cookie('refresh-token', token.refreshToken);
 
     await this.userService.updateHashedRefreshToken(
       user.id,
-      tokens.refreshToken,
+      token.refreshToken,
     );
 
     // FIXME: fix redirect url

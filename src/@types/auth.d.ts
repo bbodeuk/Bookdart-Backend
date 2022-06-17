@@ -7,7 +7,7 @@ export interface JwtPayloadWithRT extends JwtPayload {
   refreshToken: string;
 }
 
-export interface Tokens {
+export interface Token {
   accessToken: string;
   refreshToken: string;
 }
