@@ -14,16 +14,16 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  // eslint-disable-next-line
-  async googleAuth(@Req() req: Request): Promise<void> {
+  async googleAuth(): Promise<void> {
     // redirect google login page
   }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  // eslint-disable-next-line
-  async googleAuthCallback(@Req() req: Request, @Res() res: Response) {
-    // eslint-disable-next-line
+  async googleAuthCallback(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
     const user = await this.userService.findByProviderIdOrSave(
       req.user as User,
     );
