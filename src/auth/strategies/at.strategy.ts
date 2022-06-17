@@ -6,7 +6,7 @@ import { User } from 'src/@types/users';
 export type JwtPayload = { id: string; email: string };
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class JwtAtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken,
@@ -15,7 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  validate({ id, email }: JwtPayload): Partial<User> {
-    return { id, email };
+  validate(payload: JwtPayload): Partial<User> {
+    return payload;
   }
 }
