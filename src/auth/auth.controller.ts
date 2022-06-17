@@ -5,7 +5,6 @@ import { RtGuard } from '../common/guards';
 import { User } from '../@types/users';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
-import { JwtPayload } from './strategies/at.strategy';
 
 @Controller('auth')
 export class AuthController {
@@ -30,8 +29,10 @@ export class AuthController {
       req.user as User,
     );
 
+    const payload = { id: user.id, email: user.email };
+
     // TODO: refresh Token 발급, 저장
-    const { accessToken, refreshToken } = this.jwtAuthService.login(user);
+    const { accessToken, refreshToken } = this.jwtAuthService.login(payload);
     res.cookie('access-token', accessToken);
     res.cookie('refresh-token', refreshToken);
 
