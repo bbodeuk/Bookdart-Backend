@@ -11,7 +11,7 @@ import { JwtPayloadWithRT } from '../@types/auth';
 export class AuthController {
   constructor(
     private userService: UserService,
-    private jwtAuthService: AuthService,
+    private authService: AuthService,
   ) {}
 
   @Get('google')
@@ -32,7 +32,7 @@ export class AuthController {
 
     const payload = { id: user.id, email: user.email };
 
-    const { accessToken, refreshToken } = this.jwtAuthService.login(payload);
+    const { accessToken, refreshToken } = this.authService.login(payload);
     res.cookie('access-token', accessToken);
     res.cookie('refresh-token', refreshToken);
 
@@ -49,12 +49,12 @@ export class AuthController {
 
     const user = await this.userService.findById(id);
 
-    await this.jwtAuthService.checkHashedRefreshToken(
+    await this.authService.checkHashedRefreshToken(
       user.hashedRefreshToken,
       refreshToken,
     );
 
-    const tokens = this.jwtAuthService.login({
+    const tokens = this.authService.login({
       id,
       email,
     });
