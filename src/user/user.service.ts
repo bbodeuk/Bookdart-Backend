@@ -48,4 +48,16 @@ export class UserService {
       .where('id=:id', { id: userId })
       .execute();
   }
+
+  async findById(userId: string): Promise<UserEntity> {
+    const user = await this.userRepository
+      .createQueryBuilder()
+      .select()
+      .where('id=:id', { id: userId })
+      .execute();
+
+    // TODO: 유저 없는 경우 에러
+
+    return user;
+  }
 }
