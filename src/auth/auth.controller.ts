@@ -3,13 +3,13 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { User } from '../@types/users';
 import { UserService } from '../user/user.service';
-import { JwtAuthService } from '../jwt/jwt.service';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private userService: UserService,
-    private jwtAuthService: JwtAuthService,
+    private jwtAuthService: AuthService,
   ) {}
 
   @Get('google')
