@@ -31,8 +31,9 @@ export class AuthController {
     );
 
     // TODO: refresh Token 발급, 저장
-    const accessToken = this.jwtAuthService.login(user);
+    const { accessToken, refreshToken } = this.jwtAuthService.login(user);
     res.cookie('access-token', accessToken);
+    res.cookie('refresh-token', refreshToken);
 
     // FIXME: fix redirect url
     res.redirect('/');

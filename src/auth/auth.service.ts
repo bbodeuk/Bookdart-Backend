@@ -6,15 +6,17 @@ import { JwtPayload } from './strategies/at.strategy';
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  login({ email, id }: { email: string; id: string }): string {
-    const payload: JwtPayload = { email, id };
-
-    // TODO: Using refresh-token
+  login(payload: JwtPayload): { accessToken: string; refreshToken: string } {
     const accessToken = this.jwtService.sign(payload, {
       expiresIn: '2h',
       secret: process.env.JWT_SECRET,
     });
 
-    return accessToken;
+    const refreshToken = this.jwtService.sign(payload, {
+      expiresIn: '7d',
+      secret: process.env.JWT_SECRET,
+    });
+
+    return { accessToken, refreshToken };
   }
 }
