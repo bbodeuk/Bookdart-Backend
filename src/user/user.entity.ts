@@ -16,4 +16,7 @@ export class UserEntity {
 
   @Column({ type: 'varchar' })
   providerId: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  hashedRefreshToken?: string;
 }
