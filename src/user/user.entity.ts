@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { GroupEntity } from '../group/group.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -19,4 +20,7 @@ export class UserEntity {
 
   @Column({ type: 'varchar', nullable: true })
   hashedRefreshToken?: string;
+
+  @OneToMany(() => GroupEntity, (group) => group.user)
+  groups: GroupEntity[];
 }
