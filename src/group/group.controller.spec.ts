@@ -1,26 +1,34 @@
 import { Test } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { Request } from 'express';
 import { createRequest, MockRequest } from 'node-mocks-http';
 import { GroupController } from './group.controller';
 import { GroupService } from './group.service';
+import { GroupEntity } from './group.entity';
+import { UserEntity } from '../user/user.entity';
 
 describe('GroupController', () => {
   let groupController: GroupController;
   let groupService: GroupService;
   let req: MockRequest<Request>;
-  let user: { id: string; email: string };
+  let user: UserEntity;
+
+  const groupRepository = {};
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [GroupController],
-      providers: [GroupService],
+      providers: [
+        GroupService,
+        { provide: getRepositoryToken(GroupEntity), useValue: groupRepository },
+      ],
     }).compile();
 
     groupService = moduleRef.get<GroupService>(GroupService);
     groupController = moduleRef.get<GroupController>(GroupController);
 
     req = createRequest();
-    user = { id: 'generated-uuid-user', email: 'email@email.com' };
+    user = new UserEntity();
     req.user = user;
   });
 
@@ -40,7 +48,7 @@ describe('GroupController', () => {
       await groupController.createGroup(req, group);
 
       expect(groupService.create).toBeCalledWith(
-        user.id,
+        user,
         group.name,
         group.visibility,
       );

@@ -3,7 +3,7 @@ import { Request } from 'express';
 import { GroupService } from './group.service';
 import { CreateGroupReq } from './dto/create-group.dto';
 import { AtGuard } from '../common/guards/at.guard';
-import { JwtPayload } from '../@types/auth';
+import { UserEntity } from '../user/user.entity';
 
 @Controller('groups')
 export class GroupController {
@@ -15,10 +15,10 @@ export class GroupController {
     @Req() req: Request,
     @Body() dto: CreateGroupReq,
   ): Promise<string> {
-    const { id } = req.user as JwtPayload;
+    const user = req.user as UserEntity;
     const { name, visibility } = dto;
 
-    const groupId = await this.groupService.create(id, name, visibility);
+    const groupId = await this.groupService.create(user, name, visibility);
 
     return groupId;
   }
