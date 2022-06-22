@@ -13,7 +13,9 @@ describe('GroupController', () => {
   let req: MockRequest<Request>;
   let user: UserEntity;
 
-  const groupRepository = {};
+  const groupRepository = {
+    save: (group) => Promise.resolve({ ...group, id: 'generated-group-id' }),
+  };
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -30,6 +32,10 @@ describe('GroupController', () => {
     req = createRequest();
     user = new UserEntity();
     req.user = user;
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   describe('createGroup', () => {
