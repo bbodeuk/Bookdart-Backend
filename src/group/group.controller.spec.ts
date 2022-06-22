@@ -65,7 +65,9 @@ describe('GroupController', () => {
 
       jest.spyOn(groupService, 'create').mockResolvedValue(groupId);
 
-      expect(await groupController.createGroup(req, group)).toBe(groupId);
+      expect(await groupController.createGroup(req, group)).toEqual({
+        groupId,
+      });
     });
   });
 });
