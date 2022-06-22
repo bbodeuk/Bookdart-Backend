@@ -6,11 +6,11 @@ import { AtGuard } from '../common/guards/at.guard';
 import { UserEntity } from '../user/user.entity';
 
 @Controller('groups')
+@UseGuards(AtGuard)
 export class GroupController {
   constructor(private groupService: GroupService) {}
 
   @Post()
-  @UseGuards(AtGuard)
   async createGroup(
     @Req() req: Request,
     @Body() dto: CreateGroupReq,
