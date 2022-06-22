@@ -27,10 +27,9 @@ export class GroupController {
   async createGroup(
     // TODO: Fix req to user by using decorator
     @Req() req: Request,
-    @Body() dto: CreateGroupReq,
+    @Body() { name, visibility }: CreateGroupReq,
   ): Promise<Success<CreateGroupRes>> {
     const user = req.user as UserEntity;
-    const { name, visibility } = dto;
 
     const groupId = await this.groupService.create(user, name, visibility);
 
