@@ -30,7 +30,6 @@ export class GroupController {
     @Body() { name, visibility }: CreateGroupReq,
   ): Promise<Success<CreateGroupRes>> {
     const user = req.user as UserEntity;
-
     const groupId = await this.groupService.create(user, name, visibility);
 
     return new Success<CreateGroupRes>({ groupId });
