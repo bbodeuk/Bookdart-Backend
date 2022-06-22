@@ -3,3 +3,7 @@ export class CreateGroupReq {
 
   visibility: string;
 }
+
+export class CreateGroupRes {
+  groupId: string;
+}

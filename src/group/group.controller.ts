@@ -1,8 +1,8 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
+import { AtGuard } from '../common/guards';
 import { GroupService } from './group.service';
-import { CreateGroupReq } from './dto/create-group.dto';
-import { AtGuard } from '../common/guards/at.guard';
+import { CreateGroupReq, CreateGroupRes } from './dto/create-group.dto';
 import { UserEntity } from '../user/user.entity';
 
 @Controller('groups')
@@ -14,12 +14,12 @@ export class GroupController {
   async createGroup(
     @Req() req: Request,
     @Body() dto: CreateGroupReq,
-  ): Promise<string> {
+  ): Promise<CreateGroupRes> {
     const user = req.user as UserEntity;
     const { name, visibility } = dto;
 
     const groupId = await this.groupService.create(user, name, visibility);
 
-    return groupId;
+    return { groupId };
   }
 }
