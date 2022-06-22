@@ -55,4 +55,26 @@ describe('GroupController (e2e)', () => {
     expect(response.body.ok).toBeFalsy();
     expect(response.body.message).toEqual('Unauthorized');
   });
+
+  it('/groups (POST) Should have name and visibility', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/groups')
+      .set('authorization', token)
+      .send({ visibility: group.visibility });
+
+    expect(response.statusCode).toEqual(200);
+    expect(response.body.ok).toBeFalsy();
+    expect(response.body.message).toEqual('Bad Request Exception');
+  });
+
+  it('/groups (POST) visibility should be public or private', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/groups')
+      .set('authorization', token)
+      .send({ name: 'group name', visibility: 'ddd' });
+
+    expect(response.statusCode).toEqual(200);
+    expect(response.body.ok).toBeFalsy();
+    expect(response.body.message).toEqual('Bad Request Exception');
+  });
 });
