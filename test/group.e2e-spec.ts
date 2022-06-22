@@ -41,7 +41,8 @@ describe('GroupController (e2e)', () => {
       .set('authorization', token)
       .send({ name: group.name, visibility: group.visibility });
 
-    expect(response.statusCode).toEqual(201);
-    expect(response.body.groupId).toBeDefined();
+    expect(response.statusCode).toEqual(200);
+    expect(response.body.ok).toBeTruthy();
+    expect(response.body.data.groupId).toBeDefined();
   });
 });
