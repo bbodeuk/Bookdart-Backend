@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Post,
   Req,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
@@ -13,8 +14,10 @@ import { GroupService } from './group.service';
 import { CreateGroupReq, CreateGroupRes } from './dto/create-group.dto';
 import { UserEntity } from '../user/user.entity';
 import { Success } from '../common/responses/success';
+import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 
 @Controller('groups')
+@UseFilters(new HttpExceptionFilter())
 @UseGuards(AtGuard)
 export class GroupController {
   constructor(private groupService: GroupService) {}

@@ -31,7 +31,7 @@ describe('GroupController (e2e)', () => {
     await app.init();
   });
 
-  afterAll(() => {
+  afterEach(() => {
     app.close();
   });
 
@@ -44,5 +44,15 @@ describe('GroupController (e2e)', () => {
     expect(response.statusCode).toEqual(200);
     expect(response.body.ok).toBeTruthy();
     expect(response.body.data.groupId).toBeDefined();
+  });
+
+  it('/groups (POST) Unauthorization', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/groups')
+      .send({ name: group.name, visibility: group.visibility });
+
+    expect(response.statusCode).toEqual(200);
+    expect(response.body.ok).toBeFalsy();
+    expect(response.body.message).toEqual('Unauthorized');
   });
 });
