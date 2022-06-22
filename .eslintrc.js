@@ -45,6 +45,14 @@ module.exports = {
     // 'no-underscore-dangle': 'off',
     'max-classes-per-file': 'off',
 
+    // devDependencies in test
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: true,
+      },
+    ],
+
     // Eslint errors
     'no-restricted-syntax': [
       'error',
