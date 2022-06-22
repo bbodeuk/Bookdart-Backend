@@ -25,6 +25,7 @@ export class GroupController {
   @Post()
   @HttpCode(HttpStatus.OK)
   async createGroup(
+    // TODO: Fix req to user by using decorator
     @Req() req: Request,
     @Body() dto: CreateGroupReq,
   ): Promise<Success<CreateGroupRes>> {

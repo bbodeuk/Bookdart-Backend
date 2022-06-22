@@ -16,6 +16,7 @@ export class GroupService {
     name: string,
     visibility: string,
   ): Promise<string> {
+    // TODO: verify group's name
     const group = new GroupEntity();
 
     group.user = user;
