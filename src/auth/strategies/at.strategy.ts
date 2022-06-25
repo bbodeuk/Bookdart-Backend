@@ -15,6 +15,7 @@ export class JwtAtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   validate(payload: JwtPayload): Partial<User> {
+    // TODO: find user and return
     return payload;
   }
 }
