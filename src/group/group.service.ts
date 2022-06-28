@@ -41,13 +41,9 @@ export class GroupService {
       groupId: string;
     },
   ): Promise<GroupEntity> {
-    const group = await this.groupRepository
-      .createQueryBuilder('group')
-      .leftJoinAndSelect('group.user', 'user')
-      .where('group.id=:groupId', { groupId })
-      .getOne();
+    const group = await this.getOneWithUser(groupId);
 
-    if (user.id !== group.user.id) {
+    if (this.isOwner(user, group)) {
       throw new UnauthorizedException();
     }
 
@@ -56,5 +52,19 @@ export class GroupService {
 
     const updatedGroup = await this.groupRepository.save(group);
     return updatedGroup;
+  }
+
+  async getOneWithUser(groupId: string): Promise<GroupEntity> {
+    const group = await this.groupRepository
+      .createQueryBuilder('group')
+      .leftJoinAndSelect('group.user', 'user')
+      .where('group.id=:groupId', { groupId })
+      .getOne();
+
+    return group;
+  }
+
+  isOwner(user: User, group: GroupEntity): boolean {
+    return user.id !== group.user.id;
   }
 }
