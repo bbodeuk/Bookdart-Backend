@@ -7,3 +7,11 @@ export class UpdateGroupReq {
   @IsIn(['public', 'private', undefined])
   visibility?: string;
 }
+
+export class UpdateGroupRes {
+  group: {
+    id: string;
+    name: string;
+    visibility: string;
+  };
+}

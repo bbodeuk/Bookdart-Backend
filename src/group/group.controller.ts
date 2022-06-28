@@ -17,7 +17,7 @@ import { UserEntity } from '../user/user.entity';
 import { Success } from '../common/responses/success';
 import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { CreateGroupReq, CreateGroupRes } from './dto/create-group.dto';
-import { UpdateGroupReq } from './dto/update-group.dto';
+import { UpdateGroupReq, UpdateGroupRes } from './dto/update-group.dto';
 
 @Controller('groups')
 @UseFilters(new HttpExceptionFilter())
@@ -43,10 +43,22 @@ export class GroupController {
   async updateGroup(
     @Req() req: Request,
     @Body() { name, visibility }: UpdateGroupReq,
-  ): Promise<void> {
+  ): Promise<Success<UpdateGroupRes>> {
     const user = req.user as User;
     const { groupId } = req.params;
 
-    await this.groupService.updateGroup(user, { groupId, name, visibility });
+    const newGroup = await this.groupService.updateGroup(user, {
+      groupId,
+      name,
+      visibility,
+    });
+
+    return new Success<UpdateGroupRes>({
+      group: {
+        id: groupId,
+        name: newGroup.name,
+        visibility: newGroup.visibility,
+      },
+    });
   }
 }
