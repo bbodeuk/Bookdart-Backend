@@ -56,12 +56,14 @@ describe('groupService', () => {
   describe('update group', () => {
     beforeEach(() => {
       jest
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .spyOn(GroupService.prototype as any, 'getOneWithUser')
         .mockReturnValue(group);
     });
 
     it('should be thrown exception if not owner', async () => {
       jest
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .spyOn(GroupService.prototype as any, 'isOwner')
         .mockReturnValue(false);
 
