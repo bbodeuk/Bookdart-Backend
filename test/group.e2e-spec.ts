@@ -3,6 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { GroupService } from '../src/group/group.service';
+import { UserService } from '../src/user/user.service';
 
 describe('GroupController (e2e)', () => {
   let app: INestApplication;
@@ -13,8 +14,16 @@ describe('GroupController (e2e)', () => {
     visibility: 'public',
   };
 
+  const user = {
+    id: '42b6aa0a-86b4-436c-ada0-34ce499bdb0e',
+  };
+
   const groupService = {
     create: () => group.id,
+  };
+
+  const userService = {
+    findById: () => user,
   };
 
   const token = process.env.TEST_TOKEN;
@@ -25,6 +34,8 @@ describe('GroupController (e2e)', () => {
     })
       .overrideProvider(GroupService)
       .useValue(groupService)
+      .overrideProvider(UserService)
+      .useValue(userService)
       .compile();
 
     app = moduleFixture.createNestApplication();
