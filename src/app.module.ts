@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { GroupModule } from './group/group.module';
+import { BookmarkModule } from './bookmark/bookmark.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { GroupModule } from './group/group.module';
     TypeOrmModule.forRoot(),
     AuthModule,
     GroupModule,
+    BookmarkModule,
   ],
   controllers: [],
   providers: [ConfigService, { provide: 'APP_PIPE', useClass: ValidationPipe }],
