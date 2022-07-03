@@ -36,8 +36,8 @@ export class GroupService {
       visibility,
       groupId,
     }: {
-      name: string | undefined;
-      visibility: string | undefined;
+      name?: string;
+      visibility?: string;
       groupId: string;
     },
   ): Promise<GroupEntity> {
