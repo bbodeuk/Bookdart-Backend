@@ -57,7 +57,6 @@ describe('GroupController (e2e)', () => {
       .set('authorization', token)
       .send({ name: group.name, visibility: group.visibility });
 
-    expect(response.statusCode).toEqual(200);
     expect(response.body.ok).toBeTruthy();
     expect(response.body.data.groupId).toBeDefined();
   });
@@ -67,7 +66,6 @@ describe('GroupController (e2e)', () => {
       .post('/groups')
       .send({ name: group.name, visibility: group.visibility });
 
-    expect(response.statusCode).toEqual(200);
     expect(response.body.ok).toBeFalsy();
     expect(response.body.message).toEqual('Unauthorized');
   });
@@ -78,7 +76,6 @@ describe('GroupController (e2e)', () => {
       .set('authorization', token)
       .send({ visibility: group.visibility });
 
-    expect(response.statusCode).toEqual(200);
     expect(response.body.ok).toBeFalsy();
     expect(response.body.message).toEqual('Bad Request Exception');
   });
@@ -89,7 +86,6 @@ describe('GroupController (e2e)', () => {
       .set('authorization', token)
       .send({ name: 'group name', visibility: 'ddd' });
 
-    expect(response.statusCode).toEqual(200);
     expect(response.body.ok).toBeFalsy();
     expect(response.body.message).toEqual('Bad Request Exception');
   });
@@ -102,7 +98,6 @@ describe('GroupController (e2e)', () => {
       .set('authorization', token)
       .send({ name: updatedName });
 
-    expect(response.statusCode).toEqual(200);
     expect(response.body.data.group.id).toEqual(group.id);
     expect(response.body.data.group.name).toEqual(updatedName);
   });
@@ -114,7 +109,6 @@ describe('GroupController (e2e)', () => {
       .patch(`/groups/${group.id}`)
       .send({ name: updatedName });
 
-    expect(response.statusCode).toEqual(200);
     expect(response.body.ok).toBeFalsy();
     expect(response.body.message).toEqual('Unauthorized');
   });
@@ -127,7 +121,6 @@ describe('GroupController (e2e)', () => {
       .set('authorization', token)
       .send({ visibilty: updatedVisibility });
 
-    expect(response.statusCode).toEqual(200);
     expect(response.body.ok).toBeFalsy();
     expect(response.body.message).toEqual('Bad Request Exception');
   });
