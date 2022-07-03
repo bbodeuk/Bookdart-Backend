@@ -1,5 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { UnauthorizedException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { GroupEntity } from './group.entity';
 import { GroupService } from './group.service';
@@ -10,6 +11,15 @@ describe('groupService', () => {
   let groupRepository: Repository<GroupEntity>;
   const mockedRepository = {
     save: (group) => Promise.resolve({ ...group, id: 'generated-group-id' }),
+  };
+
+  const user = new UserEntity();
+
+  const group = {
+    user,
+    id: 'generated-group-id',
+    name: 'group name',
+    visibility: 'public',
   };
 
   beforeEach(async () => {
@@ -32,36 +42,38 @@ describe('groupService', () => {
   });
 
   describe('create group', () => {
-    const user = new UserEntity();
-
-    const group = {
-      user,
-      name: 'group name',
-      visibility: 'public',
-    };
-
-    const groupId = 'generated-group-id';
-
-    it('should be defined create', () => {
-      expect(groupService.create).toBeDefined();
-    });
-
-    it('should be called groupRepository.save with group', async () => {
-      const saveSpy = jest.spyOn(groupRepository, 'save');
-
-      await groupService.create(user, group.name, group.visibility);
-
-      expect(saveSpy).toBeCalledWith(group);
-    });
-
     it('should return group id', async () => {
       jest
         .spyOn(groupRepository, 'save')
-        .mockResolvedValue({ id: groupId, ...group });
+        .mockResolvedValue({ id: group.id, ...group });
 
       expect(
         await groupService.create(user, group.name, group.visibility),
-      ).toBe(groupId);
+      ).toBe(group.id);
+    });
+  });
+
+  describe('update group', () => {
+    beforeEach(() => {
+      jest
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .spyOn(GroupService.prototype as any, 'getOneWithUser')
+        .mockReturnValue(group);
+    });
+
+    it('should be thrown exception if not owner', async () => {
+      jest
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .spyOn(GroupService.prototype as any, 'isOwner')
+        .mockReturnValue(false);
+
+      await expect(
+        groupService.updateGroup(user, {
+          name: group.name,
+          visibility: group.visibility,
+          groupId: group.id,
+        }),
+      ).rejects.toThrow(UnauthorizedException);
     });
   });
 });

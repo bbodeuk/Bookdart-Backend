@@ -3,18 +3,21 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  Patch,
   Post,
   Req,
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { User } from 'src/@types/users';
 import { AtGuard } from '../common/guards';
 import { GroupService } from './group.service';
-import { CreateGroupReq, CreateGroupRes } from './dto/create-group.dto';
 import { UserEntity } from '../user/user.entity';
 import { Success } from '../common/responses/success';
 import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
+import { CreateGroupReq, CreateGroupRes } from './dto/create-group.dto';
+import { UpdateGroupReq, UpdateGroupRes } from './dto/update-group.dto';
 
 @Controller('groups')
 @UseFilters(new HttpExceptionFilter())
@@ -33,5 +36,29 @@ export class GroupController {
     const groupId = await this.groupService.create(user, name, visibility);
 
     return new Success<CreateGroupRes>({ groupId });
+  }
+
+  @Patch(':groupId')
+  @HttpCode(HttpStatus.OK)
+  async updateGroup(
+    @Req() req: Request,
+    @Body() { name, visibility }: UpdateGroupReq,
+  ): Promise<Success<UpdateGroupRes>> {
+    const user = req.user as User;
+    const { groupId } = req.params;
+
+    const newGroup = await this.groupService.updateGroup(user, {
+      groupId,
+      name,
+      visibility,
+    });
+
+    return new Success<UpdateGroupRes>({
+      group: {
+        id: groupId,
+        name: newGroup.name,
+        visibility: newGroup.visibility,
+      },
+    });
   }
 }
