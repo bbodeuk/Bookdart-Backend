@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BookmarkEntity } from './bookmark.entity';
+import { GroupService } from '../group/group.service';
 
 interface BookmarkMeta {
   title: string;
@@ -14,10 +15,11 @@ export class BookmarkService {
   constructor(
     @InjectRepository(BookmarkEntity)
     private bookmarkRepository: Repository<BookmarkEntity>,
+    private groupService: GroupService,
   ) {}
 
   async createBookmark(groupId: string, link: string): Promise<BookmarkEntity> {
-    // TODO: Get group by groupId, and check
+    const group = await this.groupService.findById(groupId);
 
     const { title, description, thumnail } = await this.fromLink(link);
 
@@ -26,6 +28,7 @@ export class BookmarkService {
     bookmarkEntity.description = description;
     bookmarkEntity.thumnail = thumnail;
     bookmarkEntity.link = link;
+    bookmarkEntity.group = group;
 
     const bookmark = await this.bookmarkRepository.save(bookmarkEntity);
 
