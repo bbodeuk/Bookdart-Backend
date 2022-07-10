@@ -38,8 +38,7 @@ export class BookmarkService {
   }
 
   private async fromLink(link: string): Promise<BookmarkMeta> {
-    // TODO: get meta data from link
-    // TODO: if incorrect link, reject
+    // TODO: Does it cover any site?
     try {
       const html = await (await fetch(link)).text();
       const $ = cheerio.load(html);
