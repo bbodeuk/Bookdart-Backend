@@ -14,8 +14,11 @@ export class BookmarkController {
   async createBookmark(
     @Body() { groupId, link }: CreateBookmarkReq,
   ): Promise<Success<CreateBookmarkRes>> {
-    const bookmark = await this.bookmarkService.createBookmark(groupId, link);
+    const { title, description, image } =
+      await this.bookmarkService.createBookmark(groupId, link);
 
-    return new Success<CreateBookmarkRes>({ bookmark });
+    return new Success<CreateBookmarkRes>({
+      bookmark: { title, description, image, link },
+    });
   }
 }
