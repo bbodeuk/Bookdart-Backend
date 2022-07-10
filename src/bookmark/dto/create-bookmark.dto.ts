@@ -14,6 +14,6 @@ export class CreateBookmarkRes {
     title: string;
     description: string;
     link: string;
-    thumnail: string;
+    image: string;
   };
 }

@@ -13,7 +13,7 @@ export class BookmarkEntity {
   description: string;
 
   @Column({ type: 'varchar' })
-  thumnail: string;
+  image: string;
 
   @Column({ type: 'varchar' })
   link: string;
