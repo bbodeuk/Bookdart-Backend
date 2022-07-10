@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import fetch from 'node-fetch';
+import cheerio from 'cheerio';
 import { BookmarkEntity } from './bookmark.entity';
 import { GroupService } from '../group/group.service';
 
 interface BookmarkMeta {
   title: string;
   description: string;
-  thumnail: string;
+  image: string;
 }
 
 @Injectable()
@@ -21,12 +23,12 @@ export class BookmarkService {
   async createBookmark(groupId: string, link: string): Promise<BookmarkEntity> {
     const group = await this.groupService.findById(groupId);
 
-    const { title, description, thumnail } = await this.fromLink(link);
+    const { title, description, image } = await this.fromLink(link);
 
     const bookmarkEntity = new BookmarkEntity();
     bookmarkEntity.title = title;
     bookmarkEntity.description = description;
-    bookmarkEntity.thumnail = thumnail;
+    bookmarkEntity.image = image;
     bookmarkEntity.link = link;
     bookmarkEntity.group = group;
 
@@ -38,11 +40,17 @@ export class BookmarkService {
   private async fromLink(link: string): Promise<BookmarkMeta> {
     // TODO: get meta data from link
     // TODO: if incorrect link, reject
+    try {
+      const html = await (await fetch(link)).text();
+      const $ = cheerio.load(html);
 
-    const title = 'title';
-    const description = 'description';
-    const thumnail = 'thumnail';
+      const title = $('meta[property="og:title"]').attr('content');
+      const description = $('meta[property="og:description"]').attr('content');
+      const image = $('meta[property="og:image"]').attr('content');
 
-    return { title, description, thumnail };
+      return { title, description, image };
+    } catch (error) {
+      throw new BadRequestException();
+    }
   }
 }
