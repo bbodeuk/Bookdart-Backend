@@ -14,9 +14,11 @@ describe('groupService', () => {
   };
 
   const user = new UserEntity();
+  const bookmarks = [];
 
   const group = {
     user,
+    bookmarks,
     id: 'generated-group-id',
     name: 'group name',
     visibility: 'public',
