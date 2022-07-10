@@ -1,5 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserEntity } from '../user/user.entity';
+import { BookmarkEntity } from '../bookmark/bookmark.entity';
 
 @Entity('groups')
 export class GroupEntity {
@@ -14,4 +21,7 @@ export class GroupEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.groups, { onDelete: 'CASCADE' })
   user: UserEntity;
+
+  @OneToMany(() => BookmarkEntity, (bookmark) => bookmark.group)
+  bookmarks: BookmarkEntity[];
 }

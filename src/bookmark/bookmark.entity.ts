@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { GroupEntity } from '../group/group.entity';
 
 @Entity('bookmarks')
 export class BookmarkEntity {
@@ -16,4 +17,9 @@ export class BookmarkEntity {
 
   @Column({ type: 'varchar' })
   link: string;
+
+  @ManyToOne(() => GroupEntity, (group) => group.bookmarks, {
+    onDelete: 'CASCADE',
+  })
+  group: GroupEntity;
 }
