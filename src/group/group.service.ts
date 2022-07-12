@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/@types/users';
@@ -11,6 +15,18 @@ export class GroupService {
     @InjectRepository(GroupEntity)
     private groupRepository: Repository<GroupEntity>,
   ) {}
+
+  async findById(groupId: string): Promise<GroupEntity> {
+    const group = await this.groupRepository.findOne({
+      where: { id: groupId },
+    });
+
+    if (!group) {
+      throw new ForbiddenException();
+    }
+
+    return group;
+  }
 
   async create(
     user: UserEntity,
