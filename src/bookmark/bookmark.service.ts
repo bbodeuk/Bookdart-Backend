@@ -43,9 +43,11 @@ export class BookmarkService {
       const html = await (await fetch(link)).text();
       const $ = cheerio.load(html);
 
-      const title = $('meta[property="og:title"]').attr('content');
-      const description = $('meta[property="og:description"]').attr('content');
-      const image = $('meta[property="og:image"]').attr('content');
+      const title =
+        $('meta[property="og:title"]').attr('content') || $('title').text();
+      const description =
+        $('meta[property="og:description"]').attr('content') || '';
+      const image = $('meta[property="og:image"]').attr('content') || '';
 
       return { title, description, image };
     } catch (error) {
