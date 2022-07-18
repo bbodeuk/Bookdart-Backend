@@ -45,7 +45,10 @@ export class AuthController {
 
   @Post('refresh')
   @UseGuards(RtGuard)
-  async refreshToken(@Req() req: Request): Promise<Success<Token>> {
+  async refreshToken(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<Success<Omit<Token, 'refreshToken'>>> {
     const { id, email, refreshToken } = req.user as JwtPayloadWithRT;
 
     const user = await this.userService.findById(id);
@@ -60,11 +63,15 @@ export class AuthController {
       email,
     });
 
+    res.cookie('refresh-token', token.refreshToken);
+
     await this.userService.updateHashedRefreshToken(
       user.id,
       token.refreshToken,
     );
 
-    return new Success<Token>(token);
+    return new Success<Omit<Token, 'refreshToken'>>({
+      accessToken: token.accessToken,
+    });
   }
 }
