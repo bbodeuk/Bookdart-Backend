@@ -22,10 +22,10 @@ export class AuthService {
   }
 
   async checkHashedRefreshToken(hashed: string, token: string): Promise<void> {
+    // FIXME: Fix verify
     const isHashedTrue = await argon2.verify(hashed, token);
 
     if (!isHashedTrue) {
-      // FIXME: Throw error or redirect login
       throw new UnauthorizedException();
     }
   }
