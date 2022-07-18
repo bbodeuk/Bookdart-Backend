@@ -5,7 +5,8 @@ import { User } from 'src/@types/users';
 import { RtGuard } from '../common/guards';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
-import { JwtPayloadWithRT } from '../@types/auth';
+import { JwtPayloadWithRT, Token } from '../@types/auth';
+import { Success } from '../common/responses/success';
 
 @Controller('auth')
 export class AuthController {
@@ -59,15 +60,11 @@ export class AuthController {
       email,
     });
 
-    res.cookie('access-token', token.accessToken);
-    res.cookie('refresh-token', token.refreshToken);
-
     await this.userService.updateHashedRefreshToken(
       user.id,
       token.refreshToken,
     );
 
-    // FIXME: fix redirect url
-    res.redirect('/');
+    res.json(new Success<Token>(token));
   }
 }
