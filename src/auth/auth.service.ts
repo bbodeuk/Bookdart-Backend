@@ -7,7 +7,7 @@ import { JwtPayload, Token } from 'src/@types/auth';
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  login(payload: JwtPayload): Token {
+  login(payload: Partial<JwtPayload>): Token {
     const accessToken = this.jwtService.sign(payload, {
       expiresIn: '1d',
       secret: process.env.JWT_SECRET,
