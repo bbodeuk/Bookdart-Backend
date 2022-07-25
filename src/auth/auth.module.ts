@@ -5,7 +5,7 @@ import { UserModule } from '../user/user.module';
 import { UserEntity } from '../user/user.entity';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { GoogleStrategy, JwtAtStrategy, JwtRtStrategy } from './strategies';
+import { GoogleStrategy, JwtAtStrategy } from './strategies';
 
 @Module({
   imports: [
@@ -14,6 +14,6 @@ import { GoogleStrategy, JwtAtStrategy, JwtRtStrategy } from './strategies';
     TypeOrmModule.forFeature([UserEntity]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy, JwtAtStrategy, JwtRtStrategy],
+  providers: [AuthService, GoogleStrategy, JwtAtStrategy],
 })
 export class AuthModule {}

@@ -5,10 +5,6 @@ export interface JwtPayload {
   exp: number;
 }
 
-export interface JwtPayloadWithRT extends JwtPayload {
-  refreshToken: string;
-}
-
 export interface Token {
   accessToken: string;
   refreshToken: string;
