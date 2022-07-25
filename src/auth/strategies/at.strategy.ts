@@ -25,18 +25,23 @@ export class JwtAtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
   async validate(req: Request, payload: JwtPayload): Promise<User> {
     const { id } = payload;
-    const at = req.headers.authorization.replace('Bearer ', '');
+    const { authorization } = req.headers;
+    const { token: accessToken } =
+      this.getTokenFromAuthorizationHeader(authorization);
     const now = new Date().getTime() / 1000;
     const user = await this.userService.findById(id);
 
-    if ((decode(at) as JwtPayload).exp > now) {
+    if (now < this.getExpirationInToken(accessToken)) {
       return user;
     }
 
-    const rt = req.cookies['refresh-token'];
+    const refreshToken = req.cookies['refresh-token'];
 
-    this.checkRefreshToken(rt);
-    await this.authService.checkHashedRefreshToken(user.hashedRefreshToken, rt);
+    this.checkRefreshToken(refreshToken);
+    await this.authService.checkHashedRefreshToken(
+      user.hashedRefreshToken,
+      refreshToken,
+    );
 
     const token = this.getNewToken(payload);
     await this.userService.updateHashedRefreshToken(id, token.refreshToken);
@@ -46,6 +51,15 @@ export class JwtAtStrategy extends PassportStrategy(Strategy, 'jwt') {
     req.cookies['refresh-token'] = token.refreshToken;
 
     return user;
+  }
+
+  private getTokenFromAuthorizationHeader(authorization: string) {
+    const [type, token] = authorization.split(' ');
+    return { type, token };
+  }
+
+  private getExpirationInToken(token: string) {
+    return (decode(token) as JwtPayload).exp;
   }
 
   private checkRefreshToken(refreshToken: string) {

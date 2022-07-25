@@ -7,7 +7,7 @@ import { JwtPayload, Token } from 'src/@types/auth';
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  login({ id, email }: Partial<JwtPayload>): Token {
+  login({ id, email }: Pick<JwtPayload, 'id' | 'email'>): Token {
     const accessToken = this.jwtService.sign(
       { id, email },
       {
