@@ -39,9 +39,7 @@ export class JwtAtStrategy extends PassportStrategy(Strategy, 'jwt') {
     await this.authService.checkHashedRefreshToken(user.hashedRefreshToken, rt);
 
     const token = this.getNewToken(payload);
-
-    // TODO: Update refresh token in user
-    // await this.userService.updateHashedRefreshToken(id, token.refreshToken);
+    await this.userService.updateHashedRefreshToken(id, token.refreshToken);
 
     req.cookies.isRefresh = true;
     req.cookies['access-token'] = token.accessToken;
