@@ -26,9 +26,9 @@ export class JwtAtStrategy extends PassportStrategy(Strategy, 'jwt') {
   async validate(req: Request, payload: JwtPayload): Promise<User> {
     const { id } = payload;
     const at = req.headers.authorization.replace('Bearer ', '');
-    const now = new Date().getTime();
+    const now = new Date().getDate();
     const user = await this.userService.findById(id);
-
+    console.log(decode(at), now);
     if ((decode(at) as JwtPayload).exp > now) {
       return user;
     }
@@ -43,7 +43,9 @@ export class JwtAtStrategy extends PassportStrategy(Strategy, 'jwt') {
     // TODO: Update refresh token in user
     // await this.userService.updateHashedRefreshToken(id, token.refreshToken);
 
-    // TODO: Change token in cookie
+    req.cookies.isRefresh = true;
+    req.cookies['access-token'] = token.accessToken;
+    req.cookies['refresh-token'] = token.refreshToken;
 
     return user;
   }
