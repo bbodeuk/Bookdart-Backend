@@ -26,9 +26,9 @@ export class JwtAtStrategy extends PassportStrategy(Strategy, 'jwt') {
   async validate(req: Request, payload: JwtPayload): Promise<User> {
     const { id } = payload;
     const at = req.headers.authorization.replace('Bearer ', '');
-    const now = new Date().getDate();
+    const now = new Date().getTime() / 1000;
     const user = await this.userService.findById(id);
-    console.log(decode(at), now);
+
     if ((decode(at) as JwtPayload).exp > now) {
       return user;
     }
