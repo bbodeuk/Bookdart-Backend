@@ -38,7 +38,7 @@ export class BookmarkController {
     });
   }
 
-  @Delete()
+  @Delete(':bookmarkId')
   @HttpCode(HttpStatus.OK)
   async deleteBookmark(
     @Req() req: Request,
