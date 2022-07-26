@@ -54,4 +54,13 @@ export class BookmarkService {
       throw new BadRequestException();
     }
   }
+
+  async deleteBookmark(bookmarkId: string): Promise<void> {
+    await this.bookmarkRepository
+      .createQueryBuilder()
+      .delete()
+      .from(BookmarkEntity)
+      .where('id=:id', { id: bookmarkId })
+      .execute();
+  }
 }

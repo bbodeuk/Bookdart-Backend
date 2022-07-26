@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -30,5 +32,14 @@ export class BookmarkController {
     return new Success<CreateBookmarkRes>({
       bookmark: { title, description, image, link },
     });
+  }
+
+  @Delete()
+  @HttpCode(HttpStatus.OK)
+  async deleteBookmark(
+    @Param('bookmarkId') bookmarkId: string,
+  ): Promise<Success<null>> {
+    await this.bookmarkService.deleteBookmark(bookmarkId);
+    return new Success(null);
   }
 }
