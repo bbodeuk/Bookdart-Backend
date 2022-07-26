@@ -71,11 +71,15 @@ export class BookmarkService {
       throw new UnauthorizedException();
     }
 
-    await this.bookmarkRepository
+    const result = await this.bookmarkRepository
       .createQueryBuilder()
       .delete()
       .from(BookmarkEntity)
       .where('id=:id', { id: bookmarkId })
       .execute();
+
+    if (result.affected === 0) {
+      throw new BadRequestException();
+    }
   }
 }
