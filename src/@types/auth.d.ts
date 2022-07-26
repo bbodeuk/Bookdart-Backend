@@ -1,10 +1,8 @@
 export interface JwtPayload {
   id: string;
   email: string;
-}
-
-export interface JwtPayloadWithRT extends JwtPayload {
-  refreshToken: string;
+  iat: number;
+  exp: number;
 }
 
 export interface Token {
