@@ -16,6 +16,18 @@ export class GroupService {
     private groupRepository: Repository<GroupEntity>,
   ) {}
 
+  async findAllByUserId(userId: string): Promise<GroupEntity[]> {
+    const [groups, count] = await this.groupRepository.findAndCount({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+    });
+
+    return groups;
+  }
+
   async findById(groupId: string): Promise<GroupEntity> {
     const group = await this.groupRepository.findOne({
       where: { id: groupId },

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Patch,
@@ -18,12 +19,22 @@ import { Success } from '../common/responses/success';
 import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { CreateGroupReq, CreateGroupRes } from './dto/create-group.dto';
 import { UpdateGroupReq, UpdateGroupRes } from './dto/update-group.dto';
+import { GroupEntity } from './group.entity';
 
 @Controller('groups')
 @UseFilters(new HttpExceptionFilter())
 @UseGuards(AtGuard)
 export class GroupController {
   constructor(private groupService: GroupService) {}
+
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  async getGroups(@Req() req: Request): Promise<Success<GroupEntity[]>> {
+    const { id: userId } = req.user as User;
+    const groups = await this.groupService.findAllByUserId(userId);
+
+    return new Success(groups);
+  }
 
   @Post()
   @HttpCode(HttpStatus.OK)
