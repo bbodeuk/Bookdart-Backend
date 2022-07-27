@@ -30,6 +30,7 @@ export class GroupController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async getGroups(@Req() req: Request): Promise<Success<GroupEntity[]>> {
+    // TODO: pagination
     const { id: userId } = req.user as User;
     const groups = await this.groupService.findAllByUserId(userId);
 
