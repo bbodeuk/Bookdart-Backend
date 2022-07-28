@@ -19,7 +19,7 @@ import { Success } from '../common/responses/success';
 import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { CreateGroupReq, CreateGroupRes } from './dto/create-group.dto';
 import { UpdateGroupReq, UpdateGroupRes } from './dto/update-group.dto';
-import { GroupEntity } from './group.entity';
+import { FindAllRes } from './dto/findAll-group.dto';
 
 @Controller('groups')
 @UseFilters(new HttpExceptionFilter())
@@ -29,12 +29,16 @@ export class GroupController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getGroups(@Req() req: Request): Promise<Success<GroupEntity[]>> {
-    // TODO: pagination
+  async getGroups(@Req() req: Request): Promise<Success<FindAllRes>> {
+    const page = Number(req.query.page) || 1;
     const { id: userId } = req.user as User;
-    const groups = await this.groupService.findAllByUserId(userId);
 
-    return new Success(groups);
+    const { groups, pagination } = await this.groupService.findAllByUserId(
+      userId,
+      page,
+    );
+
+    return new Success({ groups, pagination });
   }
 
   @Post()

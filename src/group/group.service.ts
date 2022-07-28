@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/@types/users';
 import { GroupEntity } from './group.entity';
 import { UserEntity } from '../user/user.entity';
+import { FindAllRes } from './dto/findAll-group.dto';
 
 @Injectable()
 export class GroupService {
@@ -16,16 +17,26 @@ export class GroupService {
     private groupRepository: Repository<GroupEntity>,
   ) {}
 
-  async findAllByUserId(userId: string): Promise<GroupEntity[]> {
+  async findAllByUserId(userId: string, page: number): Promise<FindAllRes> {
+    // FIXME: Remove Magic number and Set number per page.
+    const take = 9;
+    const skip = (page - 1) * take;
+
+    // TODO: order by
+
     const [groups, count] = await this.groupRepository.findAndCount({
       where: {
         user: {
           id: userId,
         },
       },
+      skip,
+      take,
     });
 
-    return groups;
+    const hasNext = skip + take < count;
+
+    return { groups, pagination: { page, hasNext } };
   }
 
   async findById(groupId: string): Promise<GroupEntity> {
