@@ -2,6 +2,7 @@ import {
   Injectable,
   UnauthorizedException,
   ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -36,6 +37,11 @@ export class GroupService {
     });
 
     const hasNext = skip + take < count;
+
+    if (groups.length < 1) {
+      // FIXME: How to response
+      throw new BadRequestException();
+    }
 
     return { groups, pagination: { page, hasNext } };
   }
