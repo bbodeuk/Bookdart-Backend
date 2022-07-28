@@ -22,8 +22,6 @@ export class GroupService {
     const take = 9;
     const skip = (page - 1) * take;
 
-    // TODO: order by
-
     const [groups, count] = await this.groupRepository.findAndCount({
       where: {
         user: {
@@ -32,6 +30,9 @@ export class GroupService {
       },
       skip,
       take,
+      order: {
+        created: 'DESC',
+      },
     });
 
     const hasNext = skip + take < count;
