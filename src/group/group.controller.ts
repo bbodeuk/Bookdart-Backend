@@ -20,7 +20,7 @@ import { Success } from '../common/responses/success';
 import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { CreateGroupReq, CreateGroupRes } from './dto/create-group.dto';
 import { UpdateGroupReq, UpdateGroupRes } from './dto/update-group.dto';
-import { FindOneRes } from '../../dist/src/group/dto/findone-group.dto';
+import { FindOneRes } from './dto/findone-group.dto';
 
 @Controller('groups')
 @UseFilters(new HttpExceptionFilter())

@@ -9,7 +9,7 @@ import { User } from 'src/@types/users';
 import { GroupEntity } from './group.entity';
 import { UserEntity } from '../user/user.entity';
 import { BookmarkEntity } from '../bookmark/bookmark.entity';
-import { FindOneRes } from '../../dist/src/group/dto/findone-group.dto';
+import { FindOneRes } from './dto/findone-group.dto';
 
 @Injectable()
 export class GroupService {
