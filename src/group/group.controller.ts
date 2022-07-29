@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
   Patch,
   Post,
   Req,
@@ -18,6 +20,7 @@ import { Success } from '../common/responses/success';
 import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { CreateGroupReq, CreateGroupRes } from './dto/create-group.dto';
 import { UpdateGroupReq, UpdateGroupRes } from './dto/update-group.dto';
+import { FindOneRes } from '../../dist/src/group/dto/findone-group.dto';
 
 @Controller('groups')
 @UseFilters(new HttpExceptionFilter())
@@ -36,6 +39,24 @@ export class GroupController {
     const groupId = await this.groupService.create(user, name, visibility);
 
     return new Success<CreateGroupRes>({ groupId });
+  }
+
+  @Get(':groupId')
+  @HttpCode(HttpStatus.OK)
+  async findOneGroup(
+    @Req() req: Request,
+    @Param('groupId') groupId: string,
+  ): Promise<Success<FindOneRes>> {
+    const user = req.user as User;
+    const page = Number(req.query.page) || 1;
+
+    // TODO: Check owner
+    // TODO: find all bookmarks in group
+    const { bookmarks, pagination } =
+      await this.groupService.findGroupWithBookmarks(user, groupId, page);
+
+    // TODO: return
+    return new Success({ bookmarks, pagination });
   }
 
   @Patch(':groupId')
