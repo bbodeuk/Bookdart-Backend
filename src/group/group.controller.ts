@@ -60,10 +60,10 @@ export class GroupController {
   @HttpCode(HttpStatus.OK)
   async updateGroup(
     @Req() req: Request,
+    @Param() groupId: string,
     @Body() { name, visibility }: UpdateGroupReq,
   ): Promise<Success<UpdateGroupRes>> {
     const user = req.user as User;
-    const { groupId } = req.params;
 
     const newGroup = await this.groupService.updateGroup(user, {
       groupId,
