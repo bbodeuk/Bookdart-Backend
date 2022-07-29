@@ -50,12 +50,9 @@ export class GroupController {
     const user = req.user as User;
     const page = Number(req.query.page) || 1;
 
-    // TODO: Check owner
-    // TODO: find all bookmarks in group
     const { bookmarks, pagination } =
       await this.groupService.findGroupWithBookmarks(user, groupId, page);
 
-    // TODO: return
     return new Success({ bookmarks, pagination });
   }
 
