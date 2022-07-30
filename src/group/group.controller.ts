@@ -21,12 +21,27 @@ import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { CreateGroupReq, CreateGroupRes } from './dto/create-group.dto';
 import { UpdateGroupReq, UpdateGroupRes } from './dto/update-group.dto';
 import { FindOneRes } from './dto/findone-group.dto';
+import { FindAllRes } from './dto/findAll-group.dto';
 
 @Controller('groups')
 @UseFilters(new HttpExceptionFilter())
 @UseGuards(AtGuard)
 export class GroupController {
   constructor(private groupService: GroupService) {}
+
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  async getGroups(@Req() req: Request): Promise<Success<FindAllRes>> {
+    const page = Number(req.query.page) || 1;
+    const { id: userId } = req.user as User;
+
+    const { groups, pagination } = await this.groupService.findAllByUserId(
+      userId,
+      page,
+    );
+
+    return new Success({ groups, pagination });
+  }
 
   @Post()
   @HttpCode(HttpStatus.OK)

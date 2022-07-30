@@ -2,6 +2,7 @@ import {
   Injectable,
   UnauthorizedException,
   ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,6 +11,7 @@ import { GroupEntity } from './group.entity';
 import { UserEntity } from '../user/user.entity';
 import { BookmarkEntity } from '../bookmark/bookmark.entity';
 import { FindOneRes } from './dto/findone-group.dto';
+import { FindAllRes } from './dto/findAll-group.dto';
 
 @Injectable()
 export class GroupService {
@@ -20,10 +22,40 @@ export class GroupService {
     private bookmarkRepository: Repository<BookmarkEntity>,
   ) {}
 
-  async findById(groupId: string): Promise<GroupEntity> {
-    const group = await this.groupRepository.findOne({
-      where: { id: groupId },
+  async findAllByUserId(userId: string, page: number): Promise<FindAllRes> {
+    // FIXME: Remove Magic number and Set number per page.
+    const take = 9;
+    const skip = (page - 1) * take;
+
+    const [groups, count] = await this.groupRepository.findAndCount({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+      skip,
+      take,
+      order: {
+        created: 'DESC',
+      },
     });
+
+    const hasNext = skip + take < count;
+
+    if (groups.length < 1) {
+      // FIXME: How to response
+      throw new BadRequestException();
+    }
+
+    return { groups, pagination: { page, hasNext } };
+  }
+
+  async findById(groupId: string): Promise<GroupEntity> {
+    const group = await this.groupRepository
+      .createQueryBuilder('group')
+      .leftJoinAndSelect('group.user', 'user')
+      .where('group.id=:groupId', { groupId })
+      .getOne();
 
     if (!group) {
       throw new ForbiddenException();
@@ -37,7 +69,7 @@ export class GroupService {
     groupId: string,
     page: number,
   ): Promise<FindOneRes> {
-    const group = await this.findOneWithUser(groupId);
+    const group = await this.findById(groupId);
 
     if (!this.isOwner(user, group)) {
       throw new UnauthorizedException();
@@ -96,7 +128,7 @@ export class GroupService {
       groupId: string;
     },
   ): Promise<GroupEntity> {
-    const group = await this.findOneWithUser(groupId);
+    const group = await this.findById(groupId);
 
     if (!this.isOwner(user, group)) {
       throw new UnauthorizedException();
@@ -107,16 +139,6 @@ export class GroupService {
 
     const updatedGroup = await this.groupRepository.save(group);
     return updatedGroup;
-  }
-
-  private async findOneWithUser(groupId: string): Promise<GroupEntity> {
-    const group = await this.groupRepository
-      .createQueryBuilder('group')
-      .leftJoinAndSelect('group.user', 'user')
-      .where('group.id=:groupId', { groupId })
-      .getOne();
-
-    return group;
   }
 
   private isOwner(user: User, group: GroupEntity): boolean {

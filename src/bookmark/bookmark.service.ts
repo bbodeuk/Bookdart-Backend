@@ -1,10 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import fetch from 'node-fetch';
 import cheerio from 'cheerio';
 import { BookmarkEntity } from './bookmark.entity';
 import { GroupService } from '../group/group.service';
+import { User } from '../@types/users';
 
 interface BookmarkMeta {
   title: string;
@@ -51,6 +56,29 @@ export class BookmarkService {
 
       return { title, description, image };
     } catch (error) {
+      throw new BadRequestException();
+    }
+  }
+
+  async deleteBookmark(
+    user: User,
+    bookmarkId: string,
+    groupId: string,
+  ): Promise<void> {
+    const group = await this.groupService.findById(groupId);
+
+    if (group.user.id !== user.id) {
+      throw new UnauthorizedException();
+    }
+
+    const result = await this.bookmarkRepository
+      .createQueryBuilder()
+      .delete()
+      .from(BookmarkEntity)
+      .where('id=:id', { id: bookmarkId })
+      .execute();
+
+    if (result.affected === 0) {
       throw new BadRequestException();
     }
   }
