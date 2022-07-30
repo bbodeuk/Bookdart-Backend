@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Patch,
   Post,
   Req,
@@ -19,6 +20,7 @@ import { Success } from '../common/responses/success';
 import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { CreateGroupReq, CreateGroupRes } from './dto/create-group.dto';
 import { UpdateGroupReq, UpdateGroupRes } from './dto/update-group.dto';
+import { FindOneRes } from './dto/findone-group.dto';
 import { FindAllRes } from './dto/findAll-group.dto';
 
 @Controller('groups')
@@ -54,14 +56,29 @@ export class GroupController {
     return new Success<CreateGroupRes>({ groupId });
   }
 
+  @Get(':groupId')
+  @HttpCode(HttpStatus.OK)
+  async findOneGroup(
+    @Req() req: Request,
+    @Param('groupId') groupId: string,
+  ): Promise<Success<FindOneRes>> {
+    const user = req.user as User;
+    const page = Number(req.query.page) || 1;
+
+    const { bookmarks, pagination } =
+      await this.groupService.findGroupWithBookmarks(user, groupId, page);
+
+    return new Success({ bookmarks, pagination });
+  }
+
   @Patch(':groupId')
   @HttpCode(HttpStatus.OK)
   async updateGroup(
     @Req() req: Request,
+    @Param() groupId: string,
     @Body() { name, visibility }: UpdateGroupReq,
   ): Promise<Success<UpdateGroupRes>> {
     const user = req.user as User;
-    const { groupId } = req.params;
 
     const newGroup = await this.groupService.updateGroup(user, {
       groupId,
