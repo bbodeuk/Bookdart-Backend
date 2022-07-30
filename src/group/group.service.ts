@@ -2,12 +2,14 @@ import {
   Injectable,
   UnauthorizedException,
   ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/@types/users';
 import { GroupEntity } from './group.entity';
 import { UserEntity } from '../user/user.entity';
+import { FindAllRes } from './dto/findAll-group.dto';
 
 @Injectable()
 export class GroupService {
@@ -15,6 +17,34 @@ export class GroupService {
     @InjectRepository(GroupEntity)
     private groupRepository: Repository<GroupEntity>,
   ) {}
+
+  async findAllByUserId(userId: string, page: number): Promise<FindAllRes> {
+    // FIXME: Remove Magic number and Set number per page.
+    const take = 9;
+    const skip = (page - 1) * take;
+
+    const [groups, count] = await this.groupRepository.findAndCount({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+      skip,
+      take,
+      order: {
+        created: 'DESC',
+      },
+    });
+
+    const hasNext = skip + take < count;
+
+    if (groups.length < 1) {
+      // FIXME: How to response
+      throw new BadRequestException();
+    }
+
+    return { groups, pagination: { page, hasNext } };
+  }
 
   async findById(groupId: string): Promise<GroupEntity> {
     const group = await this.groupRepository
