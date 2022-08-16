@@ -11,6 +11,12 @@ export class TagService {
   ) {}
 
   async findOrSave(tag: string, groupId: string): Promise<TagEntity> {
+    const previousTag = await this.tagRepository.findOne({ where: { tag } });
+
+    if (previousTag) {
+      return previousTag;
+    }
+
     const newTag = new TagEntity();
 
     newTag.tag = tag;
