@@ -1,5 +1,4 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { BookmarkEntity } from '../bookmark/bookmark.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('tags')
 export class TagEntity {
@@ -8,9 +7,6 @@ export class TagEntity {
 
   @Column()
   groupId: string;
-
-  @ManyToMany(() => BookmarkEntity, (bookmark) => bookmark.id)
-  bookmarks: BookmarkEntity[];
 
   @Column()
   tag: string;

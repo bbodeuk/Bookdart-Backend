@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { GroupEntity } from '../group/group.entity';
 import { TagEntity } from '../tag/tag.entity';
@@ -39,5 +40,6 @@ export class BookmarkEntity {
   group: GroupEntity;
 
   @ManyToMany(() => TagEntity, (tag) => tag.id)
+  @JoinTable()
   tags: TagEntity[];
 }

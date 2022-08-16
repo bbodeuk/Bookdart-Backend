@@ -10,7 +10,14 @@ export class TagService {
     private tagRepository: Repository<TagEntity>,
   ) {}
 
-  async findOrSave(tag: string): Promise<void> {
-    throw new Error('Not implement');
+  async findOrSave(tag: string, groupId: string): Promise<TagEntity> {
+    const newTag = new TagEntity();
+
+    newTag.tag = tag;
+    newTag.groupId = groupId;
+
+    const result = await this.tagRepository.save(newTag);
+
+    return result;
   }
 }

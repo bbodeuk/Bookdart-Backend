@@ -43,9 +43,16 @@ export class BookmarkService {
     bookmarkEntity.link = link;
     bookmarkEntity.group = group;
 
+    // TODO: Store tags
+    const result = await Promise.all(
+      tags.map((tag) => this.tagService.findOrSave(tag, groupId)),
+    );
+
+    bookmarkEntity.tags = result;
+
     const bookmark = await this.bookmarkRepository.save(bookmarkEntity);
 
-    // TODO: Store tags
+    console.log(result);
 
     return bookmark;
   }
