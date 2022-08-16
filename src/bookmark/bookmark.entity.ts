@@ -39,7 +39,7 @@ export class BookmarkEntity {
   })
   group: GroupEntity;
 
-  @ManyToMany(() => TagEntity, (tag) => tag.id)
+  @ManyToMany(() => TagEntity, (tag) => tag.id, { onDelete: 'CASCADE' })
   @JoinTable()
   tags: TagEntity[];
 }
