@@ -28,10 +28,10 @@ export class BookmarkController {
   @Post()
   @HttpCode(HttpStatus.OK)
   async createBookmark(
-    @Body() { groupId, link }: CreateBookmarkReq,
+    @Body() { groupId, link, tags }: CreateBookmarkReq,
   ): Promise<Success<CreateBookmarkRes>> {
     const { title, description, image } =
-      await this.bookmarkService.createBookmark(groupId, link);
+      await this.bookmarkService.createBookmark(groupId, link, tags);
 
     return new Success<CreateBookmarkRes>({
       bookmark: { title, description, image, link },

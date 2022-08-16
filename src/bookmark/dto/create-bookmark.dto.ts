@@ -7,6 +7,9 @@ export class CreateBookmarkReq {
 
   @IsString()
   link: string;
+
+  @IsString({ each: true })
+  tags: string[];
 }
 
 export class CreateBookmarkRes {

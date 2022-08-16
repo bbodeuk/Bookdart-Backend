@@ -25,10 +25,16 @@ export class BookmarkService {
     private groupService: GroupService,
   ) {}
 
-  async createBookmark(groupId: string, link: string): Promise<BookmarkEntity> {
+  async createBookmark(
+    groupId: string,
+    link: string,
+    tags: string[],
+  ): Promise<BookmarkEntity> {
     const group = await this.groupService.findById(groupId);
 
     const { title, description, image } = await this.fromLink(link);
+
+    // TODO: Store tags
 
     const bookmarkEntity = new BookmarkEntity();
     bookmarkEntity.title = title;
