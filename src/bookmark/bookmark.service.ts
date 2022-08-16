@@ -10,6 +10,7 @@ import cheerio from 'cheerio';
 import { BookmarkEntity } from './bookmark.entity';
 import { GroupService } from '../group/group.service';
 import { User } from '../@types/users';
+import { TagService } from '../tag/tag.service';
 
 interface BookmarkMeta {
   title: string;
@@ -23,6 +24,7 @@ export class BookmarkService {
     @InjectRepository(BookmarkEntity)
     private bookmarkRepository: Repository<BookmarkEntity>,
     private groupService: GroupService,
+    private tagService: TagService,
   ) {}
 
   async createBookmark(
@@ -34,8 +36,6 @@ export class BookmarkService {
 
     const { title, description, image } = await this.fromLink(link);
 
-    // TODO: Store tags
-
     const bookmarkEntity = new BookmarkEntity();
     bookmarkEntity.title = title;
     bookmarkEntity.description = description;
@@ -44,6 +44,8 @@ export class BookmarkService {
     bookmarkEntity.group = group;
 
     const bookmark = await this.bookmarkRepository.save(bookmarkEntity);
+
+    // TODO: Store tags
 
     return bookmark;
   }
