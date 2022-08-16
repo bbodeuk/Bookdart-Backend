@@ -81,6 +81,7 @@ export class GroupService {
 
     const [bookmarks, count] = await this.bookmarkRepository.findAndCount({
       where: { group: { id: groupId } },
+      relations: ['tags'],
       skip,
       take,
       // FIXME: Get order query
