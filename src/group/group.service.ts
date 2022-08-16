@@ -97,7 +97,13 @@ export class GroupService {
       hasNext,
     };
 
-    return { bookmarks, pagination };
+    return {
+      bookmarks: bookmarks.map((bookmark) => ({
+        ...bookmark,
+        tags: bookmark.tags.map((tag) => tag.tag),
+      })),
+      pagination,
+    };
   }
 
   async create(
