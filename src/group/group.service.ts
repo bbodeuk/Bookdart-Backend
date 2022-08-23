@@ -100,7 +100,7 @@ export class GroupService {
     return {
       bookmarks: bookmarks.map((bookmark) => ({
         ...bookmark,
-        tags: bookmark.tags.map((tag) => tag.tag),
+        tags: bookmark.tags.map(({ tag }) => tag),
       })),
       pagination,
     };
