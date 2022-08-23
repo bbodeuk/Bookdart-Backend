@@ -1,11 +1,7 @@
+import { Bookmark } from '../../@types/bookmark';
+
 export interface FindOneRes {
-  bookmarks: {
-    title: string;
-    description: string;
-    link: string;
-    image: string;
-    tags: string[];
-  }[];
+  bookmarks: Bookmark[];
   pagination: {
     page: number;
     hasNext: boolean;
