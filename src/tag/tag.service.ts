@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TagEntity } from './tag.entity';
 import { BookmarkEntity } from '../bookmark/bookmark.entity';
+import { GetTagsRes } from './dto/get-tags.dto';
 
 @Injectable()
 export class TagService {
@@ -30,7 +31,7 @@ export class TagService {
     return result;
   }
 
-  async findByGroupId(groupId: string): Promise<void> {
+  async findByGroupId(groupId: string): Promise<GetTagsRes> {
     const bookmarks = await this.bookmarkRepository.find({
       where: { group: { id: groupId } },
       relations: ['tags'],
@@ -46,6 +47,13 @@ export class TagService {
       return tagWithCount;
     }, {});
 
-    throw new Error('Not Implement');
+    const result = Object.keys(tagsWithCount).map((tag) => ({
+      tag,
+      count: tagsWithCount[tag],
+    }));
+
+    // FIXME: Fix logic
+
+    return { tags: result };
   }
 }
