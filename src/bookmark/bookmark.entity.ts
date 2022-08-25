@@ -5,8 +5,11 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { GroupEntity } from '../group/group.entity';
+import { TagEntity } from '../tag/tag.entity';
 
 @Entity('bookmarks')
 export class BookmarkEntity {
@@ -35,4 +38,8 @@ export class BookmarkEntity {
     onDelete: 'CASCADE',
   })
   group: GroupEntity;
+
+  @ManyToMany(() => TagEntity, (tag) => tag.id, { onDelete: 'CASCADE' })
+  @JoinTable()
+  tags: TagEntity[];
 }

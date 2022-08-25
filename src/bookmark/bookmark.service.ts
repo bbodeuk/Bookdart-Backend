@@ -10,6 +10,7 @@ import cheerio from 'cheerio';
 import { BookmarkEntity } from './bookmark.entity';
 import { GroupService } from '../group/group.service';
 import { User } from '../@types/users';
+import { TagService } from '../tag/tag.service';
 
 interface BookmarkMeta {
   title: string;
@@ -23,9 +24,14 @@ export class BookmarkService {
     @InjectRepository(BookmarkEntity)
     private bookmarkRepository: Repository<BookmarkEntity>,
     private groupService: GroupService,
+    private tagService: TagService,
   ) {}
 
-  async createBookmark(groupId: string, link: string): Promise<BookmarkEntity> {
+  async createBookmark(
+    groupId: string,
+    link: string,
+    tags: string[],
+  ): Promise<BookmarkEntity> {
     const group = await this.groupService.findById(groupId);
 
     const { title, description, image } = await this.fromLink(link);
@@ -36,6 +42,12 @@ export class BookmarkService {
     bookmarkEntity.image = image;
     bookmarkEntity.link = link;
     bookmarkEntity.group = group;
+
+    const result = await Promise.all(
+      tags.map((tag) => this.tagService.findOrSave(tag, groupId)),
+    );
+
+    bookmarkEntity.tags = result;
 
     const bookmark = await this.bookmarkRepository.save(bookmarkEntity);
 

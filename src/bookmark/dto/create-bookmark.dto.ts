@@ -1,4 +1,5 @@
 import { IsString, IsUUID } from 'class-validator';
+import { Bookmark } from '../../@types/bookmark';
 
 export class CreateBookmarkReq {
   @IsString()
@@ -7,13 +8,11 @@ export class CreateBookmarkReq {
 
   @IsString()
   link: string;
+
+  @IsString({ each: true })
+  tags: string[];
 }
 
 export class CreateBookmarkRes {
-  bookmark: {
-    title: string;
-    description: string;
-    link: string;
-    image: string;
-  };
+  bookmark: Omit<Bookmark, 'tags'>;
 }

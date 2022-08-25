@@ -1,7 +1,7 @@
-import { BookmarkEntity } from '../../bookmark/bookmark.entity';
+import { Bookmark } from '../../@types/bookmark';
 
 export interface FindOneRes {
-  bookmarks: BookmarkEntity[];
+  bookmarks: Bookmark[];
   pagination: {
     page: number;
     hasNext: boolean;
