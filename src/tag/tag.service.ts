@@ -2,12 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TagEntity } from './tag.entity';
+import { BookmarkEntity } from '../bookmark/bookmark.entity';
 
 @Injectable()
 export class TagService {
   constructor(
     @InjectRepository(TagEntity)
     private tagRepository: Repository<TagEntity>,
+    @InjectRepository(BookmarkEntity)
+    private bookmarkRepository: Repository<BookmarkEntity>,
   ) {}
 
   async findOrSave(tag: string, groupId: string): Promise<TagEntity> {
@@ -28,6 +31,21 @@ export class TagService {
   }
 
   async findByGroupId(groupId: string): Promise<void> {
+    const bookmarks = await this.bookmarkRepository.find({
+      where: { group: { id: groupId } },
+      relations: ['tags'],
+    });
+
+    const tagsWithCount = bookmarks.reduce((prev, { tags }) => {
+      const tagWithCount = { ...prev };
+
+      tags.forEach(({ tag }) => {
+        tagWithCount[tag] = prev[tag] + 1 || 1;
+      });
+
+      return tagWithCount;
+    }, {});
+
     throw new Error('Not Implement');
   }
 }
