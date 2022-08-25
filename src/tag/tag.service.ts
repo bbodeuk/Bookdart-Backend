@@ -26,4 +26,8 @@ export class TagService {
 
     return result;
   }
+
+  async findByGroupId(groupId: string): Promise<void> {
+    throw new Error('Not Implement');
+  }
 }
